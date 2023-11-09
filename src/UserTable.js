@@ -6,18 +6,23 @@ function UserTable() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch user data when the component mounts
     fetch('https://dummyjson.com/users')
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
       .then(data => {
-        if (Array.isArray(data)) {
-          setUsers(data);
+        if (Array.isArray(data.users)) {
+          setUsers(data.users);
         } else {
           console.error('Data is not in the expected format:', data);
         }
       })
       .catch(error => console.error('Error fetching user data: ' + error));
   }, []);
+  
 
   return (
     <div>
